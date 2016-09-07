@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     url(r'^$', home, name='home'),
     # TODO
-    # url(r'^list/$', event_list, name='list'),
-    # url(r'^add/$', create, name='create'),
-    # url(r'^(?P<slug>[\w-]+)/$', detail, name='detail'),
+    url(r'^events/$', list, name='list'),
+    url(r'^events/add/$', add, name='create'),
+    url(r'^events/(?P<slug>[\w-]+)/$', detail, name='detail'),
 ]

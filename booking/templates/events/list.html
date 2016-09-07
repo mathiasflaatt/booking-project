@@ -12,9 +12,10 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="thumbnail">
-                <h3><a href="{{ foo.get_absolute_url }}">{{ foo.name }}</h3>
+                <h3><a href="{{ foo.get_absolute_url }}">{{ foo.title }}</h3>
                 <div class="caption">
-                <p>{{ foo.bio | linebreaks | truncatewords:25}}</p>
+                    <a href="{{ foo.band.get_absolute_url }}"><p>{{ foo.band.name }}</p></a>
+                <p>{{ foo.location.name }}  -  {{ foo.event_time|time }}</p>
                 <p><a href="{{ foo.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
                 </div>
             </div>

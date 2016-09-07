@@ -1,9 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from django.http import HttpResponseRedirect, Http404
 from django.utils import timezone
 from .models import Events
+from .form import EventForm
 
 
 # Multipurpose group checks:
@@ -63,3 +67,62 @@ def home(request):
     # If somehow user is auth and not in any group
     raise PermissionDenied
 
+
+@login_required(login_url='login/')
+def add(request):
+    if not request.user.is_anonymous() and not isTechnician(request.user):
+        form = EventForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            messages.success(request, "Event was successfully added")
+            return HttpResponseRedirect(instance.get_absolute_url())
+
+        context = {
+            "title": "Create new Event",
+            'form': form
+        }
+        return render(request, 'events/form.html', context)
+    else:
+        raise Http404
+
+
+def detail(request, slug=None):
+    instance = get_object_or_404(Events, slug=slug)
+    context = {
+        'title': instance.title,
+        'instance': instance,
+        'workers': instance.workers
+    }
+    return render(request, 'events/detail.html', context)
+
+
+def list(request):
+    queryset_list = Events.objects.all().filter(event_time__gte=timezone.datetime.now())
+    query = request.GET.get('q')
+    if query:
+        queryset_list = queryset_list.filter(
+            Q(title__icontains=query) |
+            Q(band__name__icontains=query) |
+            Q(location__name__icontains=query) |
+            Q(band__genre__name__icontains=query)
+        ).distinct()
+    paginator = Paginator(queryset_list, 10)  # Show 10 contacts per page
+    page_request_var = 'page'
+    page = request.GET.get(page_request_var)
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        queryset = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        queryset = paginator.page(paginator.num_pages)
+
+    context = {
+        'title': 'Event overview',
+        'queryset': queryset,
+        'page_request_var': page_request_var
+    }
+    return render(request, 'events/list.html', context)

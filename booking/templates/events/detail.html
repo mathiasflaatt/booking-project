@@ -1,27 +1,26 @@
 {% extends 'base.html' %}
+{% load hasGroup %}
 
 {% block content %}
 <div class="col-sm-6 col-sm-offset-3">
 
-    <h1>{{ title }}</h1><small>{% if instance.status %}<font style="color: red">Draft</font> - {% endif %}{{ instance.timestamp }}</small>
-    {% if instance.bio %}
-        <p>Bio:</p>
-        <p> {{ instance.bio}}</p>
-    {% endif %}
-
-    {% if events %}
-         <p> Upcoming events</p>
-        {% for foo in events %}
-            <div>
-                <p>{{ foo.title }}</p>
-                <p>Location: {{ foo.location.name }}</p>
-                <p>{{foo.event_time }}</p>
-                <p>Members: {{ foo.member_tickets_price }}kr</p>
-                <p>Non-members: {{ foo.normal_tickets_price }}kr</p>
+    <h1>{{ title }}</h1><small><font style="color: red">{{ instance.status|status }}</font></small>
+        <div>
+                <p>{{ instance.title }}</p>
+                <p>Location: {{ instance.location.name }}</p>
+                <p>{{instance.event_time }}</p>
+                <p>Members: {{ instance.member_tickets_price }}kr</p>
+                <p>Non-members: {{ instance.normal_tickets_price }}kr</p>
             </div>
-        {% endfor %}
-
-    {% endif %}
+        {% if request.user|has_group:'Organizer' or request.user.is_superuser %}
+            <div>Workers on this event
+            {% for foo in workers.all %}
+                <div style="background-color:bisque">
+                <p>{{ foo.get_username }}</p>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
     <hr>
         {{ instance.content }}<br>
 
