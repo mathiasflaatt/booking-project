@@ -1,0 +1,17 @@
+html, body, .container-table {
+    height: 100%;
+}
+
+.container-table {
+    display: table;
+    height: 100% !important;
+    width: 100% !important;
+    padding: 0;
+}
+
+.vertical-center-row {
+    height: 100% !important;
+    display: table-cell;
+    vertical-align: middle;
+    float: none;
+}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="col-sm-8 col-sm-offset-2">
+    <h1 xmlns="http://www.w3.org/1999/html">{{ title }}</h1>
+    <form method="GET" action="">
+        <input type="text" name="q" placeholder="Search posts" value="{{ request.GET.q }}">
+        <input type="button" value="Search">
+    </form>
+
+    {% for foo in queryset %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="thumbnail">
+                <h3><a href="{{ foo.get_absolute_url }}">{{ foo.name }}</h3>
+                <div class="caption">
+                <p>{{ foo.bio | linebreaks | truncatewords:25}}</p>
+                <p><a href="{{ foo.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </div>
+    {% endfor %}
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if queryset.has_previous %}
+                <a href="?{{ page_request_var }}={{ queryset.previous_page_number }}{% if request.get.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}.
+            </span>
+
+            {% if queryset.has_next %}
+                <a href="?{{ page_request_var }}={{ queryset.next_page_number }}{% if request.get.q %}&q={{ request.GET.q }}{% endif %} ">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+    </div>
+{% endblock content %}

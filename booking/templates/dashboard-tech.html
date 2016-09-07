@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <h1>Hello {{ request.user.name }}</h1>
+            {% if events != null %}
+                <h3>Events you are working on</h3>
+            {% for foo in events %}
+                <p>{{ foo.title }}</p>
+                <p>{{ foo.datetime}}</p>
+            {% endfor %}
+            {% endif %}
+
+            <p>You are on Technician your Dashboard</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

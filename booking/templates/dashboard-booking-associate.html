@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <h1>Hello {{ request.user.get_username }}!</h1>
+
+            <p>You are on the booking Assistant Dashboard</p>
+
+            {% if draft and approved and pending %}
+                {% if approved %}
+                    <span>---------Just to show different status--------------------</span>
+                    <p>These events are approved, and are ready to be sent to manager</p>
+                    {% for foo in approved %}
+                        <div style="background-color: #609ab6">
+                            <p>{{ foo.title }}</p>
+                            <p>Last edited: {{ foo.last_changed | timesince }} ago</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if draft %}
+                    <span>---------Just to show different status--------------------</span>
+                    <p>These events are still under consideration by the BookingManager </p>
+                    {% for foo in draft %}
+                        <div style="background-color: orange">
+                            <p>{{ foo.title }}</p>
+                            <p>Last edited: {{ foo.last_changed | timesince }} ago</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if pending %}
+                    <span>---------Just to show different status--------------------</span>
+                    <p>These events are sent to the band manager and are awaiting response</p>
+                    {% for foo in pending %}
+                        <div style="background-color: red">
+                            <p>{{ foo.title }}</p>
+                            <p>Last edited: {{ foo.last_changed | timesince }} ago</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <p>Seems like there is nothing here, maybe you should go make some new events</p>
+                <a href="/create/"><button>Create a new Event sugestion</button></a>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

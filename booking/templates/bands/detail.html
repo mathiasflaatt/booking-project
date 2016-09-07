@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-sm-6 col-sm-offset-3">
+
+    <h1>{{ title }}</h1><small>{% if instance.status %}<font style="color: red">Draft</font> - {% endif %}{{ instance.timestamp }}</small>
+    {% if instance.bio %}
+        <p>Bio:</p>
+        <p> {{ instance.bio}}</p>
+    {% endif %}
+
+    {% if events %}
+         <p> Upcoming events</p>
+        {% for foo in events %}
+            <div>
+                <p>{{ foo.title }}</p>
+                <p>Location: {{ foo.location.name }}</p>
+                <p>{{foo.event_time }}</p>
+                <p>Members: {{ foo.member_tickets_price }}kr</p>
+                <p>Non-members: {{ foo.normal_tickets_price }}kr</p>
+            </div>
+        {% endfor %}
+
+    {% endif %}
+    <hr>
+        {{ instance.content }}<br>
+
+
+</div>
+{% endblock content %}
