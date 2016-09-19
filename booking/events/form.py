@@ -17,13 +17,8 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Events
         fields = [
-            'title',
             'location',
             'band',
             'event_time',
-            'member_tickets_price',
-            'normal_tickets_price',
+            'band_offer',
         ]
-        widgets = {
-            'event_time': AdminDateWidget()
-        }

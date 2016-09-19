@@ -40,11 +40,12 @@ class Events(models.Model):
     status = models.IntegerField(blank=False, choices=STATUS_CHOICES, default=0)
     location = models.ForeignKey(Stages)
     band = models.ForeignKey(Bands)
+    band_offer = models.IntegerField(default=0)
     event_time = models.DateTimeField(null=False, default=None)
     drafted = models.DateTimeField(auto_now_add=True, auto_now=False)
     last_changed = models.DateTimeField(auto_now_add=False, auto_now=True)
-    member_tickets_price = models.IntegerField(null=False)
-    normal_tickets_price = models.IntegerField(null=False)
+    member_tickets_price = models.IntegerField(default=0)
+    normal_tickets_price = models.IntegerField(default=0)
     workers = models.ManyToManyField(User, related_name='working_events', help_text="Members helping with this event")
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
     slug = models.SlugField(unique=True)
@@ -81,8 +82,9 @@ def create_slug(instance, new_slug=None):
 
 #
 def pre_save_post_receiver(sender, instance, *args, **kwargs):
+    if not instance.title:
+        instance.title = instance.band.name + ' @ ' + instance.location.name
     if not instance.slug:
         instance.slug = create_slug(instance)
-
 
 pre_save.connect(pre_save_post_receiver, sender=Events)

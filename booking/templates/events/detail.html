@@ -15,7 +15,7 @@
         {% if request.user|has_group:'Organizer' or request.user.is_superuser %}
             <div>Workers on this event
             {% for foo in workers.all %}
-                <div style="background-color:bisque">
+                <div style="background-color:bisque; opacity: 0.5">
                 <p>{{ foo.get_username }}</p>
                 </div>
             {% endfor %}

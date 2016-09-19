@@ -8,9 +8,12 @@
             <h1>Hello {{ request.user.name }}</h1>
             {% if events != null %}
                 <h3>Events you are working on</h3>
-            {% for foo in events %}
-                <p>{{ foo.title }}</p>
-                <p>{{ foo.datetime}}</p>
+            {% for foo in events.all %}
+                <p>{{ events }}</p>
+                <a href="{{ foo.get_absolute_url }}">
+                    <p>{{ foo.title }}</p>
+                    <p>{{ foo.event_time}}</p>
+                </a>
             {% endfor %}
             {% endif %}
 
